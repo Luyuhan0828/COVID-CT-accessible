@@ -153,17 +153,17 @@ class CovidCTDataset(Dataset):
 
     
 if __name__ == '__main__':
-    trainset = CovidCTDataset(root_dir='new_data/4.4_image',
-                              txt_COVID='new_data/newtxt/train.txt',
-                              txt_NonCOVID='old_data/oldtxt/trainCT_NonCOVID.txt',
+    trainset = CovidCTDataset(root_dir='.\Images-processed',
+                              txt_COVID='.\Data-split\COVID\\trainCT_COVID.txt',
+                              txt_NonCOVID=r'.\Data-split\NonCOVID\\trainCT_NonCOVID.txt',
                               transform= train_transformer)
-    valset = CovidCTDataset(root_dir='new_data/4.4_image',
-                              txt_COVID='new_data/newtxt/val.txt',
-                              txt_NonCOVID='old_data/oldtxt/valCT_NonCOVID.txt',
+    valset = CovidCTDataset(root_dir='.\Images-processed',
+                              txt_COVID='.\Data-split\COVID\\valCT_COVID.txt',
+                              txt_NonCOVID=r'.\Data-split\NonCOVID\\valCT_NonCOVID.txt',
                               transform= val_transformer)
-    testset = CovidCTDataset(root_dir='new_data/4.4_image',
-                              txt_COVID='new_data/newtxt/test.txt',
-                              txt_NonCOVID='old_data/oldtxt/testCT_NonCOVID.txt',
+    testset = CovidCTDataset(root_dir='.\Images-processed',
+                              txt_COVID='.\Data-split\COVID\\testCT_COVID.txt',
+                              txt_NonCOVID=r'.\Data-split\NonCOVID\\testCT_NonCOVID.txt',
                               transform= val_transformer)
     print(trainset.__len__())
     print(valset.__len__())
@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
 
 alpha = None
-device = 'cuda'
+device = 'cpu'
 def train(optimizer, epoch):
     
     model.train()
@@ -228,7 +228,7 @@ def train(optimizer, epoch):
     print('\nTrain set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         train_loss/len(train_loader.dataset), train_correct, len(train_loader.dataset),
         100.0 * train_correct / len(train_loader.dataset)))
-    f = open('model_result/{}.txt'.format(modelname), 'a+')
+    f = open('./{}.txt'.format(modelname), 'a+')
     f.write('\nTrain set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
         train_loss/len(train_loader.dataset), train_correct, len(train_loader.dataset),
         100.0 * train_correct / len(train_loader.dataset)))
@@ -432,7 +432,7 @@ class DenseNetModel(nn.Module):
         logits = self.dense_net(x)
         return logits
     
-model = DenseNetModel().cuda()
+model = DenseNetModel().cpu()
 modelname = 'DenseNet_medical'
 # print(model)
 
@@ -460,7 +460,7 @@ class SimpleCNN(torch.nn.Module):
         fc_input = conv1.view(conv1.size(0), -1)
         fc_out = self.layer4(fc_input)
  
-model = SimpleCNN().cuda()
+model = SimpleCNN().cpu()
 modelname = 'SimpleCNN'
 
 
@@ -469,7 +469,7 @@ modelname = 'SimpleCNN'
 
 ### ResNet18
 import torchvision.models as models
-model = models.resnet18(pretrained=True).cuda()
+model = models.resnet18(pretrained=True).cpu()
 modelname = 'ResNet18'
 
 
@@ -478,7 +478,7 @@ modelname = 'ResNet18'
 
 ### Dense121
 import torchvision.models as models
-model = models.densenet121(pretrained=True).cuda()
+model = models.densenet121(pretrained=True).cpu()
 modelname = 'Dense121'
 
 
@@ -487,7 +487,7 @@ modelname = 'Dense121'
 
 ### Dense169
 import torchvision.models as models
-model = models.densenet169(pretrained=True).cuda()
+model = models.densenet169(pretrained=True).cpu()
 modelname = 'Dense169'
 
 
@@ -496,7 +496,7 @@ modelname = 'Dense169'
 
 ### ResNet50
 import torchvision.models as models
-model = models.resnet50(pretrained=True).cuda()
+model = models.resnet50(pretrained=True).cpu()
 modelname = 'ResNet50'
 
 
@@ -506,7 +506,7 @@ modelname = 'ResNet50'
 ### VGGNet
 import torchvision.models as models
 model = models.vgg16(pretrained=True)
-model = model.cuda()
+model = model.cpu()
 modelname = 'vgg16'
 
 
@@ -516,7 +516,7 @@ modelname = 'vgg16'
 ### efficientNet
 from efficientnet_pytorch import EfficientNet
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=2)
-model = model.cuda()
+model = model.cpu()
 modelname = 'efficientNet-b0'
 
 
@@ -599,14 +599,14 @@ for epoch in range(1, total_epoch+1):
         
         
 #         if epoch == total_epoch:
-        torch.save(model.state_dict(), "model_backup/{}.pt".format(modelname))  
+        torch.save(model.state_dict(), "./{}.pt".format(modelname))
         
         vote_pred = np.zeros(valset.__len__())
         vote_score = np.zeros(valset.__len__())
         print('\n The epoch is {}, average recall: {:.4f}, average precision: {:.4f},average F1: {:.4f}, average accuracy: {:.4f}, average AUC: {:.4f}'.format(
         epoch, r, p, F1, acc, AUC))
 
-        f = open('model_result/{}.txt'.format(modelname), 'a+')
+        f = open('./{}.txt'.format(modelname), 'a+')
         f.write('\n The epoch is {}, average recall: {:.4f}, average precision: {:.4f},average F1: {:.4f}, average accuracy: {:.4f}, average AUC: {:.4f}'.format(
         epoch, r, p, F1, acc, AUC))
         f.close()
