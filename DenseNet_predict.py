@@ -556,7 +556,7 @@ scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 #scheduler = StepLR(optimizer, step_size=1)
 
 total_epoch = 3000
-for epoch in range(1, total_epoch+1):
+for epoch in range(1, 2):
     train(optimizer, epoch)
     
     targetlist, scorelist, predlist = val(epoch)
@@ -637,7 +637,7 @@ scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
 scheduler = StepLR(optimizer, step_size=1)
 
 total_epoch = 10
-for epoch in range(1, total_epoch+1):
+for epoch in range(1, 2):
     
     targetlist, scorelist, predlist = test(epoch)
 #     print('target',targetlist)
